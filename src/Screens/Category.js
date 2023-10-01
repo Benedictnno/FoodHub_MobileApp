@@ -10,6 +10,7 @@ import {
   Button,
   Linking,
   FlatList,
+  Pressable,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
@@ -24,7 +25,7 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import getMeals from "../Components/getFuctions";
 import MiniCards from "../Components/MiniCard";
-const BANNER_H = 400;
+const BANNER_H = 300;
 
 export default function Category({ route }) {
   const { data } = route.params;
@@ -33,7 +34,7 @@ export default function Category({ route }) {
 
   const fetchCategoryData = async () => {
     try {
-      const categoryData = await getMeals(`filter.php?c=Seafood${data[0]}`);
+      const categoryData = await getMeals(`filter.php?c=${data[0]}`);
       setCategoryList(categoryData.meals);
       // console.log(categoryData.categories);
     } catch (error) {
@@ -71,59 +72,11 @@ export default function Category({ route }) {
               uri: data[1],
             }}
           />
-          {/* <View style={styles.TextView}>
-            <View style={styles.flex}>
-              <Icon name="food-bank" style={styles.IconStyle} size={40} />
-              <Text style={styles.title}> {strMeal}</Text>
-            </View>
-            <Text style={styles.cartText}>Category : {strCategory}</Text>
-            <View>
-              <View style={styles.flex}>
-                <Icon name="list-alt" style={styles.IconStyle} size={40} />
-
-                <Text style={styles.title}>Ingredients</Text>
-              </View>
-
-              {ingredients.map((text, index) => {
-                return (
-                  text && (
-                    <View style={styles.grid} key={index}>
-                      <Text style={[styles.footer, styles.ingredientText]}>
-                        {" "}
-                        {index + 1}.{" "}
-                      </Text>
-                      <Text style={[styles.footer, styles.ingredientText]}>
-                        {" "}
-                        {text}{" "}
-                      </Text>
-                    </View>
-                  )
-                );
-              })}
-
-              <Text>{ingredients.strIngredient1}</Text>
-            </View>
-            <View>
-              <View style={styles.flex}>
-                <Text style={styles.title}>Instructions</Text>
-                <Icon
-                  name="integration-instructions"
-                  style={styles.IconStyle}
-                  size={40}
-                />
-              </View>
-              <Text style={styles.footer}>{strInstructions}</Text>
-              <Button
-                onPress={() => Linking.openURL(strYoutube)}
-                title=" Youtube Video"
-                style={styles.button}
-              />
-            </View>
-          </View> */}
-
+          <View style={styles.TextView}>
+            
           <FlatList
             numColumns={1}
-            data={CategoryList?.meals}
+            data={CategoryList}
             keyExtractor={(item, index) => item.strMeal + index}
             renderItem={({ item }) => (
               <Pressable
@@ -133,6 +86,8 @@ export default function Category({ route }) {
               </Pressable>
             )}
           />
+          </View>
+
         </View>
       </Animated.ScrollView>
     </>
