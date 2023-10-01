@@ -19,6 +19,7 @@ import { Categories } from "../Components/Data";
 import MiniCard from "../Components/MiniCard";
 import { mealsData } from "../Components/MealsData";
 import  Icon  from "react-native-vector-icons/MaterialIcons";
+import Title from "../Components/Title";
 
 export default function Home({ navigation }) {
   const [Category, setCategory] = useState([]);
@@ -37,12 +38,11 @@ export default function Home({ navigation }) {
     fetchCategoryData();
   }, []);
 
-  console.log(Category);
-
+  
   return (
     <ScrollView>
       <SearchComponent />
-      <Text>Categories</Text>
+      <Text style={styles.title}>Categories</Text>
       {Categories ? (
         <FlatList
           numColumns={1}
@@ -65,7 +65,7 @@ export default function Home({ navigation }) {
         <ActivityIndicator size={100} />
       )}
       <View>
-        <Text>Meals</Text>
+        <Text style={styles.title}>Meals</Text>
       </View>
 
       <FlatList
@@ -74,7 +74,9 @@ export default function Home({ navigation }) {
         keyExtractor={(item, index) => item.strMeal + index}
         renderItem={({ item }) => (
           <Pressable
-            onPress={() => navigation.navigate("Details", { meals: item })}
+            onPress={() =>
+              navigation.navigate("Details", { meals: item.idMeal })
+            }
           >
             <MiniCard {...item} />
           </Pressable>
@@ -88,3 +90,14 @@ export default function Home({ navigation }) {
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  title: {
+    color: "#000",
+    fontSize: 24,
+    fontWeight: "600",
+    lineHeight: 26,
+    marginLeft: 10,
+    paddingBottom: 0,
+  },
+});

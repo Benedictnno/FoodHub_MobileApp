@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -20,10 +20,24 @@ import {
   DebugInstructions,
   ReloadInstructions,
 } from "react-native/Libraries/NewAppScreen";
+import getMeals from "../Components/getFuctions";
 
 const BANNER_H = 400;
 export default function Details({ route }) {
-  const { meals } = route.params;
+   const [mealDetail, setMealDetail] = useState([]);
+   const { meals } = route.params;
+
+   const fetchCategoryData = async () => {
+     try {
+       const categoryData = await getMeals(
+         `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${meals}`
+       );
+       setMealDetail(categoryData.meals[0]);
+       // console.log(categoryData.categories);
+     } catch (error) {
+       console.error("Error:", error);
+     }
+   };
 
   const {
     idMeal,
@@ -45,8 +59,13 @@ export default function Details({ route }) {
     strIngredient11,
     strIngredient12,
     strIngredient13,
+    strIngredient14,
+    strIngredient15,
+    strIngredient16,
+    strIngredient17,
+    strIngredient18,
     strYoutube,
-  } = meals;
+  } = mealDetail;
 
   const ingredients = [
     strIngredient1,
@@ -62,11 +81,20 @@ export default function Details({ route }) {
     strIngredient11,
     strIngredient12,
     strIngredient13,
+    strIngredient14,
+    strIngredient15,
+    strIngredient16,
+    strIngredient17,
+    strIngredient18,
   ];
 
-  console.log("====================================");
-  console.log(ingredients);
-  console.log("====================================");
+
+  useEffect(()=>{
+    fetchCategoryData()
+  },[])
+ 
+
+
 
   const scrollA = useRef(new Animated.Value(0)).current;
   return (

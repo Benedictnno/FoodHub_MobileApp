@@ -1,5 +1,4 @@
 import {
-  SafeAreaView,
   StyleSheet,
   ScrollView,
   View,
@@ -7,27 +6,23 @@ import {
   StatusBar,
   Image,
   Animated,
-  Button,
-  Linking,
+ 
   FlatList,
   Pressable,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 import {
-  Header,
-  LearnMoreLinks,
   Colors,
-  DebugInstructions,
-  ReloadInstructions,
 } from "react-native/Libraries/NewAppScreen";
 
 import React, { useEffect, useRef, useState } from "react";
 import getMeals from "../Components/getFuctions";
 import MiniCards from "../Components/MiniCard";
-const BANNER_H = 300;
 
-export default function Category({ route }) {
+const BANNER_H = 350;
+
+export default function Category({ route,navigation }) {
   const { data } = route.params;
   const [CategoryList, setCategoryList] = useState([]);
   const scrollA = useRef(new Animated.Value(0)).current;
@@ -41,10 +36,6 @@ export default function Category({ route }) {
       console.error("Error:", error);
     }
   };
-
-  console.log("====================================");
-  console.log(CategoryList);
-  console.log("====================================");
 
   useEffect(() => {
     fetchCategoryData();
@@ -72,22 +63,27 @@ export default function Category({ route }) {
               uri: data[1],
             }}
           />
-          <View style={styles.TextView}>
-            
-          <FlatList
-            numColumns={1}
-            data={CategoryList}
-            keyExtractor={(item, index) => item.strMeal + index}
-            renderItem={({ item }) => (
-              <Pressable
-                onPress={() => navigation.navigate("Details", { meals: item })}
-              >
-                <MiniCards {...item} />
-              </Pressable>
-            )}
-          />
-          </View>
+          <View style={[styles.TextView]}>
+            <View style={[styles.flex]}>
+              <Icon name="food-bank" style={styles.IconStyle} size={40} />
 
+              <Text style={styles.title}> {data[0]}</Text>
+            </View>
+            <FlatList
+              numColumns={1}
+              data={CategoryList}
+              keyExtractor={(item, index) => item.strMeal + index}
+              renderItem={({ item }) => (
+                <Pressable
+                  onPress={() =>
+                    navigation.navigate("Details", { meals: item.idMeal })
+                  }
+                >
+                  <MiniCards {...item} />
+                </Pressable>
+              )}
+            />
+          </View>
         </View>
       </Animated.ScrollView>
     </>
@@ -117,6 +113,7 @@ const styles = StyleSheet.create({
   flex: {
     flexDirection: "row",
     justifyContent: "center",
+    alignItems:"center",
     marginTop: 10,
   },
   title: {
@@ -124,7 +121,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "600",
     lineHeight: 26,
-    margin: 10,
+    marginTop:10,
     paddingBottom: 0,
   },
   TextView: {

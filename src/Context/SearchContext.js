@@ -18,10 +18,8 @@ export function SearchProvider({ children }) {
   const fetchData = async () => {
     if (!searchQuery) {
       try {
-        const mealsData = await getMeals("search.php?f=a");
-        console.log("====================================");
-        console.log("first data");
-        console.log("====================================");
+        const mealsData = await getMeals("search.php?f=b");
+       
         setData(mealsData);
       } catch (error) {
         console.error("Error:", error);
@@ -30,11 +28,7 @@ export function SearchProvider({ children }) {
       try {
         const mealsData = await getMeals(`search.php?s=${searchQuery}`);
         setData(mealsData);
-        console.log("====================================");
-        // console.log(mealsData);
-        console.log("second data");
-
-        console.log("====================================");
+       
       } catch (error) {
         console.error("Error:", error);
       }

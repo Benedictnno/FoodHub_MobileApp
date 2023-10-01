@@ -8,15 +8,7 @@ export default function MiniCards({
   strArea,
   strMealThumb,
 }) {
-  console.log("====================================");
-  // console.log(
-  //   "minicard " + idMeal,
-  //   strMeal,
-  //   strCategory,
-  //   strArea,
-  //   strMealThumb
-  // );
-  console.log("====================================");
+  
   return (
     <View style={styles.container}>
       <Image source={{ uri: strMealThumb }} style={styles.Image} />
@@ -44,8 +36,7 @@ const styles = StyleSheet.create({
     marginVertical: 15,
     marginHorizontal: 15,
     backgroundColor: "#d6410b",
-    // borderColor: "#F57C51",
-    // borderStyle: "solid",
+   
     borderRadius: 10,
     // borderWidth: 2,
     display: "flex",
