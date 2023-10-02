@@ -18,7 +18,7 @@ import CategoryCard from "../Components/CategoryCard";
 import { Categories } from "../Components/Data";
 import MiniCard from "../Components/MiniCard";
 import { mealsData } from "../Components/MealsData";
-import  Icon  from "react-native-vector-icons/MaterialIcons";
+import Icon from "react-native-vector-icons/MaterialIcons";
 import Title from "../Components/Title";
 
 export default function Home({ navigation }) {
@@ -38,9 +38,19 @@ export default function Home({ navigation }) {
     fetchCategoryData();
   }, []);
 
-  
   return (
-    <ScrollView>
+    <ScrollView style={styles.MainContainer}>
+      <View style={styles.container}>
+        <View style={styles.flex}>
+          <Text style={styles.title}>Delicacy </Text>
+          <Text style={[styles.title, styles.color]}>Hub</Text>
+        </View>
+
+        <Pressable onPress={() => navigation.navigate("Profile")}>
+          <Text style={styles.text}>Profile</Text>
+        </Pressable>
+      </View>
+
       <SearchComponent />
       <Text style={styles.title}>Categories</Text>
       {Categories ? (
@@ -67,7 +77,6 @@ export default function Home({ navigation }) {
       <View>
         <Text style={styles.title}>Meals</Text>
       </View>
-
       <FlatList
         numColumns={1}
         data={data.meals}
@@ -82,16 +91,41 @@ export default function Home({ navigation }) {
           </Pressable>
         )}
       />
-
-      {/* <Button
-        title="Go to Details"
-        onPress={() => navigation.navigate("Details")}
-      /> */}
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  title: {
+    color: "#000",
+    fontSize: 24,
+    fontWeight: "600",
+    lineHeight: 26,
+    marginLeft: 10,
+    paddingBottom: 0,
+  },
+  flex: {
+    flexDirection: "row",
+    justifyContent: "center",
+
+    marginVertical: 10,
+  },
+  text: {
+    marginRight: 10,
+    fontSize: 20,
+    fontWeight: '550',
+  },
+  color: {
+    color: "#d6410b",
+  },
+  container: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    // alignItems: "stretch",
+  },
+  MainContainer: {
+    marginTop: 40,
+  },
   title: {
     color: "#000",
     fontSize: 24,

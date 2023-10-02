@@ -13,12 +13,17 @@ import Category from "./src/Screens/Category";
 import Details from "./src/Screens/Details";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { SearchProvider } from "./src/Context/SearchContext";
+import { SearchProvider, useSearch } from "./src/Context/SearchContext";
 import Title from "./src/Components/Title";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
-import { View, Text, Button ,Linking} from "react-native";
+import { View, Text, Button, Linking } from "react-native";
+import Login from "./src/Screens/Login";
+import { onAuthStateChanged } from "firebase/auth";
+import { FirebaseAuth } from "./FirebaseConfig";
+import Profile from "./src/Screens/Profile";
+import { RetrieveData, StoreData } from "./src/Components/DataStorage";
 
 const Stack = createStackNavigator();
 
@@ -35,8 +40,19 @@ const App = () => {
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
+  const [loggedIn, setLoggedIn] = useState(RetrieveData("user"));
+
+  console.log(loggedIn);
 
   useEffect(() => {
+    onAuthStateChanged(FirebaseAuth, (user) => {
+      StoreData("user", JSON.stringify(user));
+      console.log('====================================');
+      console.log(RetrieveData("user"));
+      console.log('====================================');
+      setLoggedIn(RetrieveData("user"));
+    });
+
     registerForPushNotificationsAsync().then((token) =>
       setExpoPushToken(token)
     );
@@ -121,7 +137,7 @@ const App = () => {
   return (
     <SearchProvider>
       {/* Notification */}
-      <View
+      {/* <View
         style={{
           flex: 1,
           alignItems: "center",
@@ -145,70 +161,96 @@ const App = () => {
             await schedulePushNotification();
           }}
         />
-      </View>
+      </View> */}
       {/* Notification end */}
 
       <NavigationContainer
-        linking={{
-          config: {
-            // Configuration for linking
-          },
-          async getInitialURL() {
-            // First, you may want to do the default deep link handling
-            // Check if app was opened from a deep link
-            const url = await Linking.getInitialURL();
+      // linking={{
+      //   config: {
+      //     // Configuration for linking
+      //   },
+      //   async getInitialURL() {
+      //     // First, you may want to do the default deep link handling
+      //     // Check if app was opened from a deep link
+      //     const url = await Linking.getInitialURL();
 
-            if (url != null) {
-              return url;
-            }
+      //     if (url != null) {
+      //       return url;
+      //     }
 
-            // Handle URL from expo push notifications
-            const response =
-              await Notifications.getLastNotificationResponseAsync();
+      //     // Handle URL from expo push notifications
+      //     const response =
+      //       await Notifications.getLastNotificationResponseAsync();
 
-            return response?.notification.request.content.data.url;
-          },
-          subscribe(listener) {
-            const onReceiveURL = ({ url }) => listener(url);
+      //     if (response?.notification.request.content.data.url) {
+      //       return response.notification.request.content.data.url;
+      //     }
 
-            // Listen to incoming links from deep linking
-            const eventListenerSubscription = Linking.addEventListener(
-              "url",
-              onReceiveURL
-            );
+      //     return null;
+      //   },
+      //   subscribe(listener) {
+      //     const onReceiveURL = ({ url }) => listener(url);
 
-            // Listen to expo push notifications
-            const subscription =
-              Notifications.addNotificationResponseReceivedListener(
-                (response) => {
-                  const url = response.notification.request.content.data.url;
+      //     // Listen to incoming links from deep linking
+      //     const eventListenerSubscription = Linking.addEventListener(
+      //       "url",
+      //       onReceiveURL
+      //     );
 
-                  // Any custom logic to see whether the URL needs to be handled
-                  //...
+      //     // Listen to expo push notifications
+      //     const subscription =
+      //       Notifications.addNotificationResponseReceivedListener(
+      //         (response) => {
+      //           const url = response.notification.request.content.data.url;
 
-                  // Let React Navigation handle the URL
-                  listener(url);
-                }
-              );
+      //           // Any custom logic to see whether the URL needs to be handled
+      //           //...
 
-            return () => {
-              // Clean up the event listeners
-              eventListenerSubscription.remove();
-              subscription.remove();
-            };
-          },
-        }}
+      //           // Let React Navigation handle the URL
+      //           listener(url);
+      //         }
+      //       );
+
+      //     return () => {
+      //       // Clean up the event listeners
+      //       eventListenerSubscription.remove();
+      //       subscription.remove();
+      //     };
+      //   },
+      // }}
       >
-        <Stack.Navigator initialRouteName="Home">
-          <Stack.Screen name="Details" component={Details} />
+        <Stack.Navigator initialRouteName={loggedIn ? "Home " : "Login"}>
+          {!loggedIn ? (
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{ headerShown: false }}
+            />
+          ) : (
+            <Stack.Screen
+              name="Home"
+              // options={{
+              //   title: <Title />,
+              // }}
+              options={{ headerShown: false }}
+              component={Home}
+            />
+          )}
           <Stack.Screen
-            name="Home"
-            options={{
-              title: <Title />,
-            }}
-            component={Home}
+            name="Details"
+            component={Details}
+            options={{ headerShown: false }}
           />
-          <Stack.Screen name="Category" component={Category} />
+          <Stack.Screen
+            name="Category"
+            component={Category}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Profile"
+            component={Profile}
+            options={{ headerShown: false }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </SearchProvider>

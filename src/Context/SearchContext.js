@@ -10,6 +10,7 @@ export function useSearch() {
 export function SearchProvider({ children }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [data, setData] = useState([]);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   const setSearch = (query) => {
     setSearchQuery(query);
@@ -19,7 +20,7 @@ export function SearchProvider({ children }) {
     if (!searchQuery) {
       try {
         const mealsData = await getMeals("search.php?f=b");
-       
+
         setData(mealsData);
       } catch (error) {
         console.error("Error:", error);
@@ -28,7 +29,6 @@ export function SearchProvider({ children }) {
       try {
         const mealsData = await getMeals(`search.php?s=${searchQuery}`);
         setData(mealsData);
-       
       } catch (error) {
         console.error("Error:", error);
       }
@@ -40,7 +40,9 @@ export function SearchProvider({ children }) {
   }, [searchQuery]);
 
   return (
-    <SearchContext.Provider value={{ searchQuery, fetchData, setSearch, data }}>
+    <SearchContext.Provider
+      value={{ searchQuery, fetchData, setSearch, data, loggedIn, setLoggedIn }}
+    >
       {children}
     </SearchContext.Provider>
   );

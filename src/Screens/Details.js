@@ -25,7 +25,7 @@ import getMeals from "../Components/getFuctions";
 const BANNER_H = 400;
 export default function Details({ route }) {
    const [mealDetail, setMealDetail] = useState([]);
-   const { meals } = route.params;
+   const {param1, meals } = route.params;
 
    const fetchCategoryData = async () => {
      try {
@@ -140,7 +140,7 @@ export default function Details({ route }) {
                         {index + 1}.{" "}
                       </Text>
                       <Text style={[styles.footer, styles.ingredientText]}>
-                        {" "}
+                       
                         {text}{" "}
                       </Text>
                     </View>
