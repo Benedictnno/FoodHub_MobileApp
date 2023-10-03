@@ -14,7 +14,7 @@ import Details from "./src/Screens/Details";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { SearchProvider, useSearch } from "./src/Context/SearchContext";
-import Title from "./src/Components/Title";
+
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
@@ -40,18 +40,15 @@ const App = () => {
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
-  const [loggedIn, setLoggedIn] = useState(RetrieveData("user"));
-
-  console.log(loggedIn);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
     onAuthStateChanged(FirebaseAuth, (user) => {
+      setLoggedIn(user);
       StoreData("user", JSON.stringify(user));
-      console.log('====================================');
-      console.log(RetrieveData("user"));
-      console.log('====================================');
-      setLoggedIn(RetrieveData("user"));
     });
+
+    setLoggedIn(RetrieveData("user"));
 
     registerForPushNotificationsAsync().then((token) =>
       setExpoPushToken(token)
@@ -137,7 +134,7 @@ const App = () => {
   return (
     <SearchProvider>
       {/* Notification */}
-      {/* <View
+      <View
         style={{
           flex: 1,
           alignItems: "center",
@@ -161,7 +158,7 @@ const App = () => {
             await schedulePushNotification();
           }}
         />
-      </View> */}
+      </View>
       {/* Notification end */}
 
       <NavigationContainer
@@ -249,7 +246,7 @@ const App = () => {
           <Stack.Screen
             name="Profile"
             component={Profile}
-            options={{ headerShown: false }}
+            // options={{ headerShown: false }}
           />
         </Stack.Navigator>
       </NavigationContainer>

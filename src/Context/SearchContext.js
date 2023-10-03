@@ -11,6 +11,11 @@ export function SearchProvider({ children }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [data, setData] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [userData, setUserData] = useState(null)
+
+console.log('====================================');
+console.log("userData: " + userData);
+console.log('====================================');
 
   const setSearch = (query) => {
     setSearchQuery(query);
@@ -41,7 +46,7 @@ export function SearchProvider({ children }) {
 
   return (
     <SearchContext.Provider
-      value={{ searchQuery, fetchData, setSearch, data, loggedIn, setLoggedIn }}
+      value={{ searchQuery, fetchData, setSearch, data, loggedIn, setLoggedIn , userData, setUserData}}
     >
       {children}
     </SearchContext.Provider>

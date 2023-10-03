@@ -24,12 +24,7 @@ const styles = StyleSheet.create({
   container: {
     marginVertical: 20,
     marginHorizontal: 15,
-    // backgroundColor: "#F57C51",
-    // borderColor: "#F57C51",
-    // borderStyle: "solid",
-    // borderRadius: 10,
-    // borderWidth: 2,
-
+    
     elevation: 3,
     shadowOffset: {
       width: 8,

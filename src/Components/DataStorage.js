@@ -1,27 +1,32 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useSearch } from "../Context/SearchContext";
 
 export const StoreData = async (key, value) => {
+  const { userData, setUserData } = useSearch();
   try {
     await AsyncStorage.setItem(key, value);
+    console.log("====================================");
+    console.log(value);
+    console.log("====================================");
     console.log("Data saved successfully");
+      setUserData(value);
+
   } catch (error) {
     console.error("Error saving data:", error);
   }
 };
 
 export const RetrieveData = async (key) => {
-    let value = false 
   try {
-     value = await AsyncStorage.getItem(key);
-    // if (value !== null) {
-    //   console.log("Retrieved data:", value);
-    // } else {
-    //   console.log("No data found with key:", value);
-    // }
-} catch (error) {
+    const value = await AsyncStorage.getItem(key);
+    if (value !== null) {
+      console.log("Retrieved data:", value);
+    } else {
+      console.log("No data found with key:", JSON.parse(value));
+    }
+  } catch (error) {
     console.error("Error retrieving data:", error);
-}
-return value
+  }
 };
 
 export const RemoveData = async (key) => {
